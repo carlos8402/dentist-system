@@ -14,7 +14,7 @@ export function Navbar() {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
 
-  // Variantes para animação da lista no menu mobile
+  // Variantes para animação do menu mobile
   const listVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -23,13 +23,17 @@ export function Navbar() {
     },
   };
 
-  // Variantes para animação dos itens no menu mobile
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
-  const menuItems = ["Diferencial", "Serviços", "Contatos"];
+  const menuItems = [
+    { text: "Diferencial", id: "differential" },
+    { text: "Serviços", id: "services" },
+    { text: "Contatos", id: "contact" },
+    { text: "Página Inicial", id: "home" }, // Somente no mobile
+  ];
 
   return (
     <div className="flex items-center justify-between px-4 md:pl-12 bg-white">
@@ -50,19 +54,21 @@ export function Navbar() {
 
       {/* Menu fixo para telas maiores */}
       <ul className="hidden md:flex md:items-center md:justify-end md:gap-8 md:px-6 text-2xl font-medium">
-        {menuItems.map((text, index) => (
-          <li key={index}>
-            <a
-              href={`#${text.toLowerCase().replace(" ", "-")}`}
-              className="text-emerald-800 hover:text-emerald-600  xl:hover:border-b-2 xl:border-amber-600 xl:pb-1"
-            >
-              {text}
-            </a>
-          </li>
-        ))}
+        {menuItems
+          .filter((item) => item.id !== "home") // 🔥 Remove "Página Inicial" do menu fixo
+          .map((item, index) => (
+            <li key={index}>
+              <a
+                href={`#${item.id}`}
+                className="text-emerald-800 hover:text-emerald-600 xl:hover:border-b-2 xl:border-amber-600 xl:pb-1"
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
       </ul>
 
-      {/* Overlay para fundo escuro */}
+      {/* Overlay para fundo escuro no mobile */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -85,24 +91,14 @@ export function Navbar() {
             exit="hidden"
             className="fixed inset-0 size-full bg-white/90 flex flex-col items-center justify-center text-emerald-500 text-3xl font-semibold gap-14 z-20 md:hidden"
           >
-            {/* Item "Página Inicial" apenas no menu mobile */}
-            <motion.li variants={itemVariants}>
-              <a
-                href="#home"
-                onClick={toggleMenu}
-                className="text-amber-700"
-              >
-                Página Inicial
-              </a>
-            </motion.li>
-            {menuItems.map((text, index) => (
+            {menuItems.map((item, index) => (
               <motion.li key={index} variants={itemVariants}>
                 <a
-                  href={`#${text.toLowerCase().replace(" ", "-")}`}
+                  href={`#${item.id}`}
                   onClick={toggleMenu}
                   className="text-amber-700"
                 >
-                  {text}
+                  {item.text}
                 </a>
               </motion.li>
             ))}

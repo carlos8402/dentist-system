@@ -9,7 +9,7 @@ import { Services } from "../services";
 
 export function Home() {
   return (
-    <div className="">
+    <div id="home">
       <Modal />
       <Navbar />
       <div className="lg:relative bg-white">
